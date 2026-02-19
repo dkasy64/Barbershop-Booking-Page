@@ -5,6 +5,17 @@ import App from './App.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<App/>}></Route>
+          <Route path="Book" element={<Counting/>}></Route>
+          <Route path="About" element={<Listing/>}></Route>
+          <Route path="cards" element={<Cards/>}></Route>
+          <Route path="Prices" element={<API />}></Route>
+          <Route path="Contact" element={<API />}></Route>
+        </Route> 
+      </Routes>
+    </BrowserRouter>
   </StrictMode>,
 )
