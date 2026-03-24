@@ -5,7 +5,9 @@ export default function mainLayout() {
     return (
         <>
             <NavBar />
-            <Outlet />
+            <div style={{ paddingTop: '70px' }}>
+                <Outlet />
+            </div>
         </>
     )
 }
