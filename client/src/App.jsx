@@ -1,5 +1,12 @@
 import { useState } from 'react'
 import NavBar from './components/NavBar'
+import taperImg from './assets/taper.jpeg'
+import beardImg from './assets/beard.jpeg'
+import shapeUpImg from './assets/shapeUp.jpeg'
+import villageImg from './assets/village.jpg'
+import instagramIcon from './assets/instagram.png'
+import linkedinIcon from './assets/linkden.png'
+import villImg from './assets/vill.jpg'
 
 export default function App() {
   const [name, setName] = useState('')
@@ -110,33 +117,43 @@ export default function App() {
         </section>
 
         <section id="about" className="section">
-          <h2>About Us</h2>
-          <p>We are a local barbershop offering fast, friendly service and great style.</p>
+          <h2>About Me</h2>
+          <p>I am a Quinnipiac Finance student willing to offer my Barber Services to all.</p>
           <p>Everything is handled in one easy place, so your booking and appointment are always smooth.</p>
+          <img src={villImg} alt="Location" className="about-image" />
         </section>
+        <p className="center-text">All apointments are handled at Village 580.</p>
 
         <section id="prices" className="section section-alt">
           <h2>Prices</h2>
           <div className="cards">
             <div className="card">
-              <h3>Classic Haircut</h3>
+              <h3>Taper Fade</h3>
               <p>$25 - Includes cut and style.</p>
+              <img src={taperImg} alt="Taper Fade" className="price-image" />
             </div>
             <div className="card">
               <h3>Beard Trim</h3>
               <p>$15 - Precision shaping and clean edges.</p>
+              <img src={beardImg} alt="Beard Trim" className="price-image" />
             </div>
             <div className="card">
-              <h3>Hot Towel Shave</h3>
-              <p>$30 - Smooth shave with hot towel finish.</p>
+              <h3>Shape up</h3>
+              <p>$20 - Precise line definition.</p>
+              <img src={shapeUpImg} alt="Shape Up" className="price-image" />
             </div>
           </div>
         </section>
 
         <section id="contact" className="section">
           <h2>Contact</h2>
-          <p>Reach us at (123) 456-7890 or info@barbershop.com.</p>
-          <p>Drop by anytime during our hours, or book an appointment above.</p>
+          <p>Reach me at (571) 660-8147 or dawitkasy64@gmail.com.</p>
+          <p className="social-row">
+            <img src={instagramIcon} alt="Instagram" className="social-icon" />
+            <a href="https://www.youtube.com/results?search_query=+circiuts+klr" target="_blank" rel="noreferrer">@mikiyas_cutz</a>
+            <img src={linkedinIcon} alt="LinkedIn" className="social-icon" />
+            <a href="https://www.linkedin.com/in/mikiyas-wolde/" target="_blank" rel="noreferrer">Mikiyas Wolde</a>
+          </p>
         </section>
       </main>
     </>

@@ -107,6 +107,40 @@ a:hover {
   box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
 }
 
+.price-image {
+  width: 100%;
+  margin-top: 16px;
+  border-radius: 16px;
+  object-fit: cover;
+  max-height: 180px;
+}
+
+.about-image {
+  width: 100%;
+  margin-top: 20px;
+  border-radius: 18px;
+  object-fit: cover;
+  max-height: 260px;
+}
+
+.center-text {
+  text-align: center;
+  margin: 20px 0;
+  color: #334155;
+}
+
+.social-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.social-icon {
+  width: 20px;
+  height: 20px;
+}
+
 button,
 .button {
   display: inline-flex;
