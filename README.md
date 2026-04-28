@@ -1,16 +1,128 @@
-# Fullstack Barbershop Booking Website
+# 💈 Barbershop Booking Page
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A fullstack web application designed to streamline the process of booking barbershop appointments — built primarily for **Quinnipiac University students**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📖 About
 
-## React Compiler
+This project removes the hassle of scheduling a barbershop visit by giving students a clean, intuitive online booking interface. Instead of calling or walking in, users can browse services and book an appointment directly from their browser.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🚀 Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 📅 Online appointment booking system
+- 💇 Service selection with pricing
+- 📱 Fully responsive design for mobile and desktop
+- 🎨 Modern UI with smooth styling
+- 📍 Business information and contact section
+- ⚡ Fast page loads with Vite's Hot Module Replacement (HMR)
+
+---
+
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React (via Vite) |
+| Styling | CSS |
+| Backend | Node.js / Express (`server.js`) |
+| Build Tool | Vite |
+| Linting | ESLint |
+
+---
+
+## 📁 Project Structure
+
+```
+Barbershop-Booking-Page/
+├── client/
+│   └── src/          # React components and frontend logic
+├── node_modules/     # Dependencies
+├── index.html        # App entry point
+├── server.js         # Express backend server
+├── vite.config.js    # Vite configuration
+├── eslint.config.js  # ESLint rules
+├── package.json      # Project metadata and scripts
+└── .env              # Environment variables (not committed)
+```
+
+---
+
+## ⚙️ Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18 or higher recommended)
+- npm
+
+### Installation
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/dkasy64/Barbershop-Booking-Page.git
+
+# 2. Navigate into the project directory
+cd Barbershop-Booking-Page
+
+# 3. Install dependencies
+npm install
+```
+
+### Environment Variables
+
+Create a `.env` file in the root directory and add any required variables:
+
+```env
+# Example
+PORT=3000
+```
+
+> ⚠️ Never commit your `.env` file. It is already listed in `.gitignore`.
+
+### Running the App
+
+```bash
+# Start the frontend (Vite dev server)
+npm run dev
+
+# Start the backend server
+node server.js
+```
+
+Then open your browser and go to `http://localhost:5173` (or whichever port Vite uses).
+
+---
+
+## 📸 Preview
+
+> _Add screenshots or a demo GIF here._
+
+```
+![Homepage Preview](./screenshots/homepage.png)
+```
+
+---
+
+## 🤝 Contributing
+
+Pull requests are welcome! For major changes, please open an issue first to discuss what you'd like to change.
+
+1. Fork the repo
+2. Create your feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m 'Add your feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is open source. Add a license file if you'd like to specify usage terms.
+
+---
+
+## 👤 Author
+
+**dkasy64** — [GitHub Profile](https://github.com/dkasy64)
