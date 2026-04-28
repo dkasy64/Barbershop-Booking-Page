@@ -8,6 +8,13 @@ A fullstack web application designed to streamline the process of booking barber
 
 This project removes the hassle of scheduling a barbershop visit by giving students a clean, intuitive online booking interface. Instead of calling or walking in, users can browse services and book an appointment directly from their browser.
 
+
+
+## 🌐 Live Demo
+
+> 🚧 **Coming soon!** The live site will be available at:
+> [`https://your-live-site-url.com`](https://your-live-site-url.com)
+
 ---
 
 ## 🚀 Features
