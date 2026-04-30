@@ -6,6 +6,7 @@ const navItems = [
   { display: 'About', to: '#about' },
   { display: 'Prices', to: '#prices' },
   { display: 'Contact', to: '#contact' },
+  { display: 'Admin', to: '/admin' },
 ]
 
 export default function NavBar() {

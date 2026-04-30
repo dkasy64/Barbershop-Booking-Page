@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import NavBar from './components/NavBar'
 import taperImg from './assets/taper.jpeg'
 import beardImg from './assets/beard.jpeg'
@@ -7,70 +7,107 @@ import villageImg from './assets/village.jpg'
 import instagramIcon from './assets/instagram.png'
 import linkedinIcon from './assets/linkden.png'
 import villImg from './assets/vill.jpg'
-
+ 
+const formatTime = (timeString) => {
+  const [hourStr, minute] = timeString.split(':')
+  const hour = parseInt(hourStr, 10)
+  const ampm = hour >= 12 ? 'PM' : 'AM'
+  const displayHour = hour % 12 === 0 ? 12 : hour % 12
+  return `${displayHour}:${minute} ${ampm}`
+}
+ 
+// Normalize any date value (ISO string or plain) to YYYY-MM-DD
+const normalizeDate = (dateVal) => {
+  if (!dateVal) return ''
+  // If it's already YYYY-MM-DD, return as-is
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateVal)) return dateVal
+  // Otherwise parse and extract the date portion using UTC to avoid timezone shifts
+  const d = new Date(dateVal)
+  return d.toISOString().split('T')[0]
+}
+ 
 export default function App() {
+  const [schedule, setSchedule] = useState([])
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [date, setDate] = useState('')
   const [appointmentTime, setAppointmentTime] = useState('')
   const [message, setMessage] = useState('')
   const [isSuccess, setIsSuccess] = useState(null)
-
-  const convertTo24Hour = (time) => {
-    const [timePart, ampm] = time.split(' ')
-    let [hour, minute] = timePart.split(':')
-    hour = parseInt(hour)
-    if (ampm === 'PM' && hour !== 12) hour += 12
-    if (ampm === 'AM' && hour === 12) hour = 0
-    return `${hour.toString().padStart(2, '0')}:${minute}:00`
-  }
-
-  async function handleBooking(event) {
+  const [statusEmail, setStatusEmail] = useState('')
+  const [statusId, setStatusId] = useState('')
+  const [statusResults, setStatusResults] = useState([])
+  const [statusError, setStatusError] = useState('')
+ 
+  useEffect(() => {
+    const loadSchedule = async () => {
+      const response = await fetch('http://localhost:3001/schedule')
+      const data = await response.json()
+      if (response.ok) setSchedule(data.schedule)
+    }
+    loadSchedule()
+  }, [])
+ 
+  const availableDates = useMemo(() => {
+    // Normalize all dates and deduplicate
+    return [...new Set(schedule.map((slot) => normalizeDate(slot.schedule_date)))]
+  }, [schedule])
+ 
+  const availableTimes = useMemo(() => {
+    return schedule
+      .filter((slot) => normalizeDate(slot.schedule_date) === date)
+      .map((slot) => slot.schedule_time)
+  }, [schedule, date])
+ 
+  const handleBooking = async (event) => {
     event.preventDefault()
-
+    setMessage('')
+    setIsSuccess(null)
+ 
     const response = await fetch('http://localhost:3001/book', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         student_name: name,
         student_email: email,
-        appointment_date: date,
-        appointment_time: convertTo24Hour(appointmentTime),
+        appointment_date: date,       // already normalized via state
+        appointment_time: appointmentTime,
       }),
     })
     const data = await response.json()
+ 
     if (response.ok) {
-      setMessage('Booking successful!')
+      setMessage(`Booking pending. Your booking ID is ${data.bookingId}.`)
       setIsSuccess(true)
     } else {
-      setMessage('Booking failed. Please try again.')
+      setMessage(data.message || 'Booking failed. Please try again.')
       setIsSuccess(false)
     }
     console.log(data)
   }
-
-  const times = []
-  for (let hour = 15; hour <= 17; hour++) {
-    for (let minute = 0; minute < 60; minute += 30) {
-      const time = `${hour % 12 || 12}:${minute === 0 ? '00' : minute} ${hour < 12 ? 'AM' : 'PM'}`
-      times.push(time)
-    }
-  }
-
-  const getUpcomingTuesdaysAndThursdays = () => {
-    const dates = []
-    const today = new Date()
-    for (let i = 1; i <= 60; i++) {
-      const nextDate = new Date(today)
-      nextDate.setDate(today.getDate() + i)
-      const day = nextDate.getDay()
-      if (day === 2 || day === 4) {
-        dates.push(nextDate.toISOString().split('T')[0])
+ 
+  const handleStatusSearch = async (event) => {
+    event.preventDefault()
+    setStatusError('')
+    setStatusResults([])
+ 
+    const params = new URLSearchParams()
+    if (statusEmail) params.append('email', statusEmail)
+    if (statusId) params.append('id', statusId)
+ 
+    const response = await fetch(`http://localhost:3001/bookings?${params.toString()}`)
+    const data = await response.json()
+ 
+    if (response.ok) {
+      setStatusResults(data.bookings)
+      if (data.bookings.length === 0) {
+        setStatusError('No booking found with that email or ID.')
       }
+    } else {
+      setStatusError(data.error || 'Unable to fetch booking status.')
     }
-    return dates
   }
-
+ 
   return (
     <>
       <NavBar />
@@ -94,9 +131,12 @@ export default function App() {
               </label>
               <label>
                 Date
-                <select value={date} onChange={(e) => setDate(e.target.value)} required>
+                <select value={date} onChange={(e) => {
+                  setDate(e.target.value)
+                  setAppointmentTime('')
+                }} required>
                   <option value="">Select a date</option>
-                  {getUpcomingTuesdaysAndThursdays().map((d) => (
+                  {availableDates.map((d) => (
                     <option key={d} value={d}>{d}</option>
                   ))}
                 </select>
@@ -105,8 +145,8 @@ export default function App() {
                 Time
                 <select value={appointmentTime} onChange={(e) => setAppointmentTime(e.target.value)} required>
                   <option value="">Select a time</option>
-                  {times.map((time) => (
-                    <option key={time} value={time}>{time}</option>
+                  {availableTimes.map((time) => (
+                    <option key={time} value={time}>{formatTime(time)}</option>
                   ))}
                 </select>
               </label>
@@ -115,7 +155,38 @@ export default function App() {
             {message && <p style={{ color: isSuccess ? 'green' : 'red', marginTop: '10px' }}>{message}</p>}
           </div>
         </section>
-
+ 
+        <section id="status" className="section section-alt">
+          <h2>Check Booking Status</h2>
+          <p>Enter your booking email or booking ID to view pending, confirmed, or denied status.</p>
+          <form onSubmit={handleStatusSearch} className="booking-form">
+            <label>
+              Email
+              <input type="email" value={statusEmail} onChange={(e) => setStatusEmail(e.target.value)} />
+            </label>
+            <label>
+              Booking ID
+              <input value={statusId} onChange={(e) => setStatusId(e.target.value)} />
+            </label>
+            <button type="submit" className="button">Check Status</button>
+          </form>
+          {statusError && <p style={{ color: 'red', marginTop: '10px' }}>{statusError}</p>}
+          {statusResults.length > 0 && (
+            <div className="cards">
+              {statusResults.map((booking) => (
+                <div key={booking.id} className="card">
+                  <p><strong>ID:</strong> {booking.id}</p>
+                  <p><strong>Name:</strong> {booking.student_name}</p>
+                  <p><strong>Email:</strong> {booking.student_email}</p>
+                  <p><strong>Date:</strong> {booking.appointment_date}</p>
+                  <p><strong>Time:</strong> {formatTime(booking.appointment_time)}</p>
+                  <p><strong>Status:</strong> {booking.status}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+ 
         <section id="about" className="section">
           <h2>About Me</h2>
           <p>I am a Quinnipiac Finance student willing to offer my Barber Services to all.</p>
@@ -123,7 +194,7 @@ export default function App() {
           <img src={villImg} alt="Location" className="about-image" />
         </section>
         <p className="center-text">All apointments are handled at Village 580.</p>
-
+ 
         <section id="prices" className="section section-alt">
           <h2>Prices</h2>
           <div className="cards">
@@ -144,7 +215,7 @@ export default function App() {
             </div>
           </div>
         </section>
-
+ 
         <section id="contact" className="section">
           <h2>Contact</h2>
           <p>Reach me at (571) 660-8147 or dawitkasy64@gmail.com.</p>
@@ -159,3 +230,4 @@ export default function App() {
     </>
   )
 }
+ 

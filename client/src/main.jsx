@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import App from './App'
 import MainLayout from './components/MainLayout'
+import Admin from './pages/Admin'
 import Test from './pages/test'
 
 createRoot(document.getElementById('root')).render(
@@ -12,6 +13,7 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<App />} />
+          <Route path="admin" element={<Admin />} />
           <Route path="Home" element={<Test />} />
           <Route path="About" element={<Test />} />
           <Route path="Booking" element={<Test />} />
