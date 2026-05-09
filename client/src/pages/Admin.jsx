@@ -33,6 +33,9 @@ export default function Admin() {
   const [bookings, setBookings] = useState([])
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
+  const [password, setPassword] = useState('')
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [loginError, setLoginError] = useState('')
 
   const minDate = useMemo(() => {
     const d = new Date()
@@ -44,6 +47,25 @@ export default function Admin() {
     d.setDate(d.getDate() + 14)
     return d.toISOString().split('T')[0]
   }, [])
+
+  const handleLogin = async () => {
+    try {
+      const res = await fetch('http://localhost:3001/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password })
+      })
+      const data = await res.json()
+      if (data.success) {
+        setIsAuthenticated(true)
+        setLoginError('')
+      } else {
+        setLoginError('Invalid password')
+      }
+    } catch (err) {
+      setLoginError('Login failed')
+    }
+  }
 
   const fetchSchedule = async () => {
     const res = await fetch('http://localhost:3001/schedule')
@@ -118,6 +140,17 @@ export default function Admin() {
       setMessage(`Booking ${status}.`)
       fetchBookings()
     }
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <main className="section">
+        <h2>Admin Login</h2>
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter password" />
+        <button onClick={handleLogin}>Login</button>
+        {loginError && <p style={{color: 'red'}}>{loginError}</p>}
+      </main>
+    )
   }
 
   return (

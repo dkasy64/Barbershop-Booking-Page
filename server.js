@@ -187,6 +187,15 @@ app.post('/book', (req, res) => {
   })
 })
  
+app.post('/login', (req, res) => {
+  const { password } = req.body
+  if (password === process.env.ADMIN_PASSWORD) {
+    res.json({ success: true })
+  } else {
+    res.status(401).json({ error: 'Invalid password' })
+  }
+})
+ 
 const PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`)
